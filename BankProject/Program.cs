@@ -1,5 +1,81 @@
 ﻿class Program
 {
+    static Dictionary<int, Dictionary<string, string>> Users = new Dictionary<int, Dictionary<string, string>>
+    {
+        { 123456, new Dictionary<string, string>
+            {
+                { "pin", "1234" },
+                { "name", "Alice" }
+            }
+        },
+
+        { 789012, new Dictionary<string, string>
+            {
+                { "pin", "5678" },
+                { "name", "Bob" }
+            }
+        },
+        
+        { 345678, new Dictionary<string, string>
+            {
+                { "pin", "9012" },
+                { "name", "Anna" }
+            }
+        },
+        { 901234, new Dictionary<string, string>
+            {
+                { "pin", "3456" },
+                { "name", "Frank" }
+            }
+        },
+        { 567890, new Dictionary<string, string>
+            {
+                { "pin", "7890" },
+                { "name", "Christopher" }
+            }
+            
+        }
+    };
+
+    private static Dictionary<int, Dictionary<string, string>> Accounts = new Dictionary<int, Dictionary<string, string>>
+    {
+        {
+            1001, new Dictionary<string, string>
+            {
+                { "balance", "1000" },
+                { "accountName", "Savings" }
+            }
+        },
+        {
+            1002, new Dictionary<string, string>
+            {
+                { "balance", "2000" },
+                { "accountName", "Checking" }
+            }
+        },
+        {
+            1003, new Dictionary<string, string>
+            {
+                { "balance", "3000" },
+                { "accountName", "Savings" }
+            }
+        },
+        {
+            1004, new Dictionary<string, string>
+            {
+                { "balance", "4000" },
+                { "accountName", "Checking" }
+            }
+        },
+        {
+            1005, new Dictionary<string, string>
+            {
+                { "balance", "5000" },
+                { "accountName", "Savings" }
+            }
+        }
+    };
+    
     static void Main()
     {
         Console.WriteLine(@"  
@@ -50,10 +126,13 @@
                 userPinInput = Console.ReadLine();
             }
 
-            if (CheckLogin(userNumber, userPin))
+            if (Users.ContainsKey(userNumber))
             {
-                AccountInterface(userNumber);
-                return;
+                if (Users[userNumber]["pin"] == userPin.ToString())
+                {
+                    AccountMenu(userNumber);
+                    return;
+                }
             }
 
             Console.WriteLine("Fel användarnummer eller pinkod.");
@@ -63,51 +142,10 @@
         Console.ReadKey();
     }
 
-    static bool CheckLogin(int userNumber, int userPin)
+    static void AccountMenu(int userNumber)
     {
-        List<int> validUserNumbers = new List<int> { 123456, 789012 , 345678, 901234, 567890};
-
-        if (validUserNumbers.Contains(userNumber))
-        {
-            switch (userNumber)
-            {
-                case 123456:
-                    if (userPin == 1234)
-                    {
-                        return true;
-                    }
-                    break;
-                case 789012:
-                    if (userPin == 5678)
-                    {
-                        return true;
-                    }
-                    break;
-                case 345678:
-                    if (userPin == 9012)
-                    {
-                        return true;
-                    }
-                    break;
-                case 901234:
-                    if (userPin == 3456)
-                    {
-                        return true;
-                    }
-                    break;
-                case 567890:
-                    if (userPin == 7890)
-                    {
-                        return true;
-                    }
-                    break;
-            }
-        }
-        return false;
-    }
-
-    static void AccountInterface(int userNumber)
-    {
+        Console.WriteLine("Välkommen till ditt konto, " + Users[userNumber]["name"]);
+        
         
     }
     
