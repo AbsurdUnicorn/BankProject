@@ -12,3 +12,4 @@ C:\Users\pierr\RiderProjects\Skola\BankProject\BankProject\obj\Debug\net10.0\ref
 C:\Users\pierr\RiderProjects\Skola\BankProject\BankProject\obj\Debug\net10.0\BankProject.pdb
 C:\Users\pierr\RiderProjects\Skola\BankProject\BankProject\obj\Debug\net10.0\BankProject.genruntimeconfig.cache
 C:\Users\pierr\RiderProjects\Skola\BankProject\BankProject\obj\Debug\net10.0\ref\BankProject.dll
+C:\Users\pierr\RiderProjects\Skola\BankProject\BankProject\obj\Debug\net10.0\BankProject.sourcelink.json
