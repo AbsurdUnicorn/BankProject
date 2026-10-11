@@ -1,6 +1,6 @@
 ﻿class Program
 {
-    //Rooted dictionary with information regarding each user
+    // Stores each user's PIN and name, using their user number as the key
     static Dictionary<int, Dictionary<string, string>> UsersInformation = new Dictionary<int, Dictionary<string, string>>
     {
         { 123456, new Dictionary<string, string>
@@ -37,7 +37,7 @@
         }
     };
     
-    //Dicitonary of each bankaccount linked to each user
+    // Stores the account numbers belonging to each user by linking the user numbers with a list of account numbers
     static Dictionary<int, List<int>> UserAccounts = new Dictionary<int, List<int>>
     {
         { 123456, new List<int> { 1001, 1002, 1003 } },
@@ -47,7 +47,7 @@
         { 567890, new List<int> { 1012, 1013, 1014 } }
     };
 
-    //Dictionary of name of each bankaccount
+    // Stores account names linked to their account numbers
     static Dictionary<int, string> AccountNames = new Dictionary<int, string>
     {
         { 1001, "Privatkonto" },
@@ -70,7 +70,7 @@
         { 1014, "Sparkonto" }
     };
 
-    //Dictionary of the balance of each bankaccount
+    // Stores account balances linked to their account numbers. Stores the balance in decimal to include öre
     static Dictionary<int, decimal> AccountBalances = new Dictionary<int, decimal>
     {
         { 1001, 1000.00m },
@@ -119,7 +119,7 @@
         
         ");
         
-        //Check for login information
+        // Checks the user's login information
         int userNumber;
         int userPin;
         for (int loginTries = 0; loginTries < 3; loginTries++)
@@ -128,6 +128,7 @@
 
             string userNumberInput = Console.ReadLine();
 
+            // Check if user's input is 6 characters long and if it's all numbers
             while (userNumberInput.Length != 6 || !int.TryParse(userNumberInput, out userNumber))
             {
                 Console.WriteLine("Skriv endast ett 6 siffrigt heltal:");
@@ -138,14 +139,17 @@
 
             string userPinInput = Console.ReadLine();
 
+            // Check if user's input is 4 characters long and if it's all numbers
             while (userPinInput.Length != 4 || !int.TryParse(userPinInput, out userPin))
             {
                 Console.WriteLine("Skriv endast ett 4 siffrigt heltal:");
                 userPinInput = Console.ReadLine();
             }
 
+            // Look up if the user number exists as a key in the dictionary
             if (UsersInformation.ContainsKey(userNumber))
             {
+                // Checks whether the entered PIN matches the user's stored PIN
                 if (UsersInformation[userNumber]["pin"] == userPin.ToString())
                 {
                     AccountMenu(userNumber);
@@ -156,6 +160,7 @@
             Console.WriteLine("Fel användarnummer eller pinkod");
         }
 
+        // Close program after 3 failed attempts
         Console.WriteLine("För många misslyckade inloggningsförsök. Programmet avslutas");
         Console.ReadKey();
     }
@@ -164,7 +169,7 @@
     {
         Console.WriteLine("Välkommen till ditt konto, " + UsersInformation[userNumber]["name"]);
         
-        //Menu for all the options
+        // Menu for all the options
         string userChoice;
         while (true)
         {
@@ -195,12 +200,13 @@
         }
     }
 
+    // Lists all users accounts in the concole
     static void ViewAccounts(int userNumber)
     {
-        //List storing all bankaccount numbers for lookup
+        // List storing all bankaccount numbers for lookup
         List<int> accounts = UserAccounts[userNumber];
 
-        //List all accounts in console
+        // List all accounts in console
         foreach (int accountNumber in accounts)
         {
             Console.WriteLine(AccountNames[accountNumber] + ": " + AccountBalances[accountNumber] + " kr");
@@ -212,12 +218,13 @@
         Console.Clear();
     }
 
+    // Handles transfers between the user's accounts and validates the input
     static void AccountTransfer(int userNumber)
 {
-    //List storing all bankaccount numbers for lookup
+    // List storing all bankaccount numbers for lookup
     List<int> accounts = UserAccounts[userNumber];
 
-    //List all accounts in console
+    // List all accounts in console, adding a number at the front letting user select based on that
     int tempNum = 1;
     foreach (int accountNumber in accounts)
     {
@@ -227,7 +234,7 @@
 
     int account1, account2;
     
-    //Let user pick first account to transfer from
+    // Let user pick first account to transfer from
     Console.WriteLine();
     Console.WriteLine("Välj ett konto att överföra från genom att skriva kontots nummer. Skriv avbryt för att avbryta");
     
@@ -236,23 +243,25 @@
     {
         userAccountInput = Console.ReadLine();
 
+        // Let user cancel early
         if (userAccountInput.ToLower() == "avbryt")
         {
             Console.WriteLine("Återgår till meny");
             return;
         }
-
+        // Check if user's input is a number, is greater than 0 and that it's not more than available options
         if (!int.TryParse(userAccountInput, out account1) || account1 < 1 || account1 > accounts.Count)
         {
             Console.WriteLine("Ogiltigt val, försök igen");
         }
+        // Continues when the input is valid
         else
         {
             break;
         }
     }
     
-    //Let user pick first account to transfer to
+    // Let user pick account to transfer to
     Console.WriteLine();
     Console.WriteLine("Välj ett konto att överföra till genom att skriva kontots nummer. Skriv avbryt för att avbryta");
 
@@ -260,30 +269,34 @@
     {
         userAccountInput = Console.ReadLine();
 
+        // Let user cancel early
         if (userAccountInput.ToLower() == "avbryt")
         {
             Console.WriteLine("Återgår till meny");
             return;
         }
-
+        // Check if input is a number
         if (!int.TryParse(userAccountInput, out account2) || account2 < 1 || account2 > accounts.Count)
         {
             Console.WriteLine("Ogiltigt val, försök igen");
         }
+        // Check if both accounts are the same
         else if (account2 == account1)
         {
             Console.WriteLine("Du kan inte överföra till samma konto, försök igen");
         }
+        // Continues when the input is valid
         else
         {
             break;
         }
     }
     
-    //Let user pick transfer amount
+    // Converts the selected account choice into its actual account number
     int fromAccountNumber = accounts[account1 - 1];
     int toAccountNumber = accounts[account2 - 1];
     
+    // Let user pick transfer amount
     Console.WriteLine();
     Console.WriteLine("Hur mycket vill du överföra? Skriv avbryt för att avbryta");
 
@@ -293,31 +306,35 @@
     {
         transferInput = Console.ReadLine();
 
+        // Let user cancel early
         if (transferInput.ToLower() == "avbryt")
         {
             Console.WriteLine("Återgår till meny");
             return;
         }
-
+        // Check if input is a number
         if (!decimal.TryParse(transferInput, out transferAmount))
         {
             Console.WriteLine("Ogiltigt belopp, skriv ett nummer");
         }
+        // Check if input is greater than 0
         else if (transferAmount <= 0)
         {
             Console.WriteLine("Beloppet måste vara större än 0");
         }
+        // Check if enough balance
         else if (transferAmount > AccountBalances[fromAccountNumber])
         {
             Console.WriteLine("Det finns inte tillräckligt med pengar på kontot");
         }
+        // Continues when the input is valid
         else
         {
             break;
         }
     }
     
-    //Do the transfer
+    // Subtracts the amount from one account and adds it to the other
     AccountBalances[fromAccountNumber] -= transferAmount;
     AccountBalances[toAccountNumber] += transferAmount;
 
@@ -332,12 +349,13 @@
     Console.Clear();
 }
 
+    // Handles withdrawals and verifies the user's PIN before deducting money
     static void AccountWithdrawl(int userNumber)
     {
-        //List storing all bankaccount numbers for lookup
+        // List storing all bankaccount numbers for lookup
         List<int> accounts = UserAccounts[userNumber];
 
-        //List all accounts in console
+        // List all accounts in console, adding a number at the front letting user select based on that
         int tempNum = 1;
         foreach (int accountNumber in accounts)
         {
@@ -345,7 +363,7 @@
             tempNum++;
         }
         
-        //Let user pick account to withdraw from
+        // Let user pick account to withdraw from
         Console.WriteLine("Välj ett konta att ta ut pengar från genom att skriva kontots nummer. Skriv avbryt för att avbryta");
 
         int withdrawlAccount;
@@ -354,24 +372,28 @@
         {
             userAccountInput = Console.ReadLine();
 
+            // Let user cancel early
             if (userAccountInput.ToLower() == "avbryt")
             {
                 Console.WriteLine("Återgår till meny");
                 return;
             }
-
+            // Check if input is a number
             if (!int.TryParse(userAccountInput, out withdrawlAccount) || withdrawlAccount < 1 || withdrawlAccount > accounts.Count)
             {
                 Console.WriteLine("Ogiltigt val, försök igen");
             }
+            // Continues when the input is valid
             else
             {
                 break;
             }
         }
+        
+        // Converts the selected account choice into its actual account number
         int AccountNumber = accounts[withdrawlAccount - 1];
         
-        //Let user pick withdraw amount
+        // Let user pick withdraw amount
         Console.WriteLine("Hur mycket vill du ta ut? Skriv avbryt för att avbryta");
 
         decimal withdrawlAmount;
@@ -379,51 +401,56 @@
         while (true)
         {
             withdrawlInput = Console.ReadLine();
-
+            // Let user cancel early
             if (withdrawlInput.ToLower() == "avbryt")
             {
                 Console.WriteLine("Återgår till meny");
                 return;
             }
-
+            // Check if input is a number
             if (!decimal.TryParse(withdrawlInput, out withdrawlAmount))
             {
                 Console.WriteLine("Ogiltigt belopp, skriv ett nummer");
             }
+            // Check if input is greater than 0
             else if (withdrawlAmount <= 0)
             {
                 Console.WriteLine("Beloppet måste vara större än 0");
             }
+            // Check if enough balance
             else if (withdrawlAmount > AccountBalances[AccountNumber])
             {
                 Console.WriteLine("Det finns inte tillräckligt med pengar på kontot");
             }
+            // Continues when the input is valid
             else
             {
                 break;
             }
         }
         
-        //Confirm users pincode
+        // Confirm users pincode
         Console.WriteLine("Skriv in din pinkod för att genomföra uttaget");
         
-        //Check for login
         int userPin;
         for (int loginTries = 0; loginTries < 3; loginTries++)
         {
             string userPinInput = Console.ReadLine();
 
+            // Check if user's input is 4 characters long and if it's all numbers
             while (userPinInput.Length != 4 || !int.TryParse(userPinInput, out userPin))
             {
                 Console.WriteLine("Skriv endast ett 4 siffrigt heltal:");
                 userPinInput = Console.ReadLine();
             }
 
+            // Look up if the user number exists as a key in the dictionary
             if (UsersInformation.ContainsKey(userNumber))
             {
+                // Checks whether the entered PIN matches the user's stored PIN
                 if (UsersInformation[userNumber]["pin"] == userPin.ToString())
                 {
-                    //Do the withdrawl
+                    // Subtracts the amount from the account
                     AccountBalances[AccountNumber] -= withdrawlAmount;
         
                     Console.WriteLine();
@@ -437,9 +464,9 @@
                     return;
                 }
             }
-
             Console.WriteLine("Fel pinkod, försök igen");
         }
+        // Return to menu if too many failed attempts
         Console.WriteLine("För många misslyckade försök, går tillbaka till menyn");
     }
 }
